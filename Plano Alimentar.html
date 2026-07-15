@@ -1,0 +1,1084 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plano Alimentar</title>
+    <style>
+:root {
+  color-scheme: dark;
+  --bg: #080a0d;
+  --panel: #151922;
+  --panel-strong: #1b202b;
+  --line: #2a303b;
+  --text: #f7f2e8;
+  --muted: #958f84;
+  --gold: #e6bb67;
+  --green: #68d18b;
+  --blue: #72bdd0;
+  --red: #ee7674;
+  --input: #0f131a;
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(104, 209, 139, 0.12), transparent 30rem),
+    linear-gradient(135deg, #080a0d 0%, #10131a 100%);
+  color: var(--text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(1280px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 0.95;
+}
+
+h2 {
+  font-size: 1.9rem;
+}
+
+.top-actions,
+.meal-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.ghost-button,
+.icon-button {
+  min-height: 42px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.primary-button {
+  padding: 0 18px;
+  background: var(--gold);
+  color: #17120a;
+  font-weight: 800;
+}
+
+.ghost-button,
+.icon-button {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.ghost-button {
+  padding: 0 16px;
+}
+
+.icon-button {
+  width: 46px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.danger {
+  color: #ffc4c3;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(230, 187, 103, 0.7);
+}
+
+.summary-panel,
+.detail-panel,
+.meal-card,
+.food-form {
+  background: rgba(21, 25, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+}
+
+.summary-panel {
+  margin: 28px 0;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summary-grid span,
+.meal-totals span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.summary-grid strong,
+.meal-totals strong {
+  font-size: 1.5rem;
+}
+
+.macro-bar {
+  display: flex;
+  height: 14px;
+  overflow: hidden;
+  margin-top: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.macro-bar span {
+  display: block;
+  min-width: 4px;
+}
+
+.protein {
+  background: var(--green);
+}
+
+.carbs {
+  background: var(--gold);
+}
+
+.fat {
+  background: var(--blue);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(290px, 390px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.meal-list {
+  display: grid;
+  gap: 14px;
+}
+
+.meal-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.meal-card.active {
+  border-color: rgba(230, 187, 103, 0.8);
+  background: #202530;
+}
+
+.meal-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.meal-icon[data-icon="sun"]::before {
+  content: "\2600\FE0F";
+}
+
+.meal-icon[data-icon="sandwich"]::before {
+  content: "\1F96A";
+}
+
+.meal-icon[data-icon="plate"]::before {
+  content: "\1F37D\FE0F";
+}
+
+.meal-icon[data-icon="bowl"]::before {
+  content: "\1F963";
+}
+
+.meal-icon[data-icon="bolt"]::before {
+  content: "\26A1\FE0F";
+}
+
+.meal-icon[data-icon="moon"]::before {
+  content: "\1F31B";
+}
+
+.meal-icon[data-icon="crescent"]::before {
+  content: "\1F319";
+}
+
+.meal-icon[data-icon="meal"]::before {
+  content: "\1F37D\FE0F";
+}
+
+.meal-copy {
+  min-width: 0;
+}
+
+.meal-copy strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.08rem;
+}
+
+.meal-copy small {
+  display: block;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+.meal-kcal {
+  color: var(--gold);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.detail-panel {
+  min-width: 0;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.detail-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.meal-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.food-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.food-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.food-table th,
+.food-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: right;
+}
+
+.food-table th:first-child,
+.food-table td:first-child {
+  text-align: left;
+}
+
+.food-table th {
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.food-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.food-name {
+  font-weight: 800;
+}
+
+.food-unit {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.qty-control {
+  display: inline-grid;
+  grid-template-columns: 32px 72px 32px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--input);
+}
+
+.qty-control button {
+  width: 32px;
+  height: 34px;
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.qty-control input {
+  width: 72px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: center;
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.delete-food,
+.edit-food {
+  height: 34px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.delete-food {
+  width: 34px;
+  border: 1px solid rgba(238, 118, 116, 0.45);
+  background: rgba(238, 118, 116, 0.1);
+  color: #ffc4c3;
+}
+
+.edit-food {
+  min-width: 54px;
+  border: 1px solid rgba(230, 187, 103, 0.42);
+  background: rgba(230, 187, 103, 0.1);
+  color: var(--gold);
+  font-size: 0.72rem;
+}
+
+.food-form {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(6, minmax(88px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: var(--input);
+  color: var(--text);
+  padding: 0 10px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--gold);
+}
+
+.empty-state {
+  padding: 24px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    width: min(100% - 20px, 1280px);
+    padding: 18px 0;
+  }
+
+  .topbar,
+  .detail-heading {
+    flex-direction: column;
+  }
+
+  .top-actions,
+  .meal-actions,
+  .primary-button,
+  .ghost-button {
+    width: 100%;
+  }
+
+  .top-actions button,
+  .food-form button {
+    width: 100%;
+  }
+
+  .summary-grid,
+  .meal-totals,
+  .meal-list,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-card {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  .meal-kcal {
+    grid-column: 2;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>Plano Alimentar</h1>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-button" id="resetPlan" type="button" title="Restaurar plano inicial">
+            Restaurar
+          </button>
+          <button class="primary-button" id="addMeal" type="button" title="Adicionar refeicao">
+            + Refeicao
+          </button>
+        </div>
+      </header>
+
+      <section class="summary-panel" aria-label="Resumo nutricional">
+        <div class="summary-grid">
+          <div>
+            <span>Calorias</span>
+            <strong id="totalCalories">0 kcal</strong>
+          </div>
+          <div>
+            <span>Proteina</span>
+            <strong id="totalProtein">0g</strong>
+          </div>
+          <div>
+            <span>Carboidrato</span>
+            <strong id="totalCarbs">0g</strong>
+          </div>
+          <div>
+            <span>Gordura</span>
+            <strong id="totalFat">0g</strong>
+          </div>
+        </div>
+        <div class="macro-bar" aria-hidden="true">
+          <span id="proteinBar" class="protein"></span>
+          <span id="carbBar" class="carbs"></span>
+          <span id="fatBar" class="fat"></span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="meal-list" id="mealList" aria-label="Refeicoes"></aside>
+
+        <section class="detail-panel" aria-label="Detalhes da refeicao">
+          <div class="detail-heading">
+            <div>
+              <p class="eyebrow">Refeicao selecionada</p>
+              <h2 id="selectedMealName">Cafe da manha</h2>
+            </div>
+            <div class="meal-actions">
+              <button class="icon-button" id="renameMeal" type="button" title="Renomear refeicao">Aa</button>
+              <button class="icon-button danger" id="deleteMeal" type="button" title="Excluir refeicao">Del</button>
+            </div>
+          </div>
+
+          <div class="meal-totals" id="mealTotals"></div>
+
+          <div class="food-table-wrap">
+            <table class="food-table">
+              <thead>
+                <tr>
+                  <th>Alimento</th>
+                  <th>Qtd.</th>
+                  <th>kcal</th>
+                  <th>PTN</th>
+                  <th>CHO</th>
+                  <th>FAT</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="foodRows"></tbody>
+            </table>
+          </div>
+
+          <form class="food-form" id="foodForm">
+            <div class="form-grid">
+              <label>
+                Alimento
+                <input id="foodName" autocomplete="off" required placeholder="Ex.: Arroz branco" />
+              </label>
+              <label>
+                Quantidade
+                <input id="foodQuantity" type="number" min="1" step="1" required value="100" />
+              </label>
+              <label>
+                Unidade
+                <select id="foodUnit">
+                  <option value="g">g</option>
+                  <option value="ml">ml</option>
+                  <option value="un">un</option>
+                  <option value="dose">dose</option>
+                </select>
+              </label>
+              <label>
+                kcal
+                <input id="foodCalories" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Proteina
+                <input id="foodProtein" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Carboidrato
+                <input id="foodCarbs" type="number" min="0" step="0.1" required />
+              </label>
+              <label>
+                Gordura
+                <input id="foodFat" type="number" min="0" step="0.1" required />
+              </label>
+            </div>
+            <button class="primary-button" type="submit">Adicionar alimento</button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <template id="mealTemplate">
+      <button class="meal-card" type="button">
+        <span class="meal-icon"></span>
+        <span class="meal-copy">
+          <strong></strong>
+          <small></small>
+        </span>
+        <span class="meal-kcal"></span>
+      </button>
+    </template>
+
+    <script>
+const STORAGE_KEY = "diet-planner-v1";
+
+const defaultPlan = {
+  selectedMealId: "breakfast",
+  meals: [
+    {
+      id: "breakfast",
+      name: "Cafe da manha",
+      icon: "sun",
+      foods: [
+        food("Pao frances", 50, "g", 150, 5, 29, 1.6),
+        food("Ovos inteiros", 2, "un", 144, 12.6, 0.8, 9.8),
+        food("Banana", 1, "un", 105, 1.3, 27, 0.4),
+        food("Aveia", 30, "g", 117, 5, 20, 2.1),
+      ],
+    },
+    {
+      id: "snack",
+      name: "Lanche",
+      icon: "sandwich",
+      foods: [
+        food("Iogurte natural", 170, "g", 110, 8, 12, 3),
+        food("Granola", 30, "g", 135, 3, 20, 4.5),
+      ],
+    },
+    {
+      id: "lunch",
+      name: "Almoco",
+      icon: "plate",
+      foods: [
+        food("Arroz branco", 150, "g", 195, 3.6, 42, 0.4),
+        food("Feijao carioca", 120, "g", 91, 5.8, 16.4, 0.6),
+        food("Frango grelhado", 160, "g", 264, 49.6, 0, 5.8),
+        food("Azeite", 8, "g", 72, 0, 0, 8),
+      ],
+    },
+    {
+      id: "afternoon",
+      name: "Lanche tarde",
+      icon: "bowl",
+      foods: [
+        food("Whey protein", 30, "g", 120, 24, 3, 2),
+        food("Leite integral", 200, "ml", 124, 6.4, 9.6, 6.6),
+        food("Maca", 1, "un", 72, 0.4, 19, 0.2),
+      ],
+    },
+    {
+      id: "preworkout",
+      name: "Pre-treino",
+      icon: "bolt",
+      foods: [
+        food("Tapioca", 70, "g", 168, 0.2, 42, 0),
+        food("Mel", 15, "g", 46, 0, 12.4, 0),
+        food("Cafe sem acucar", 120, "ml", 2, 0.2, 0, 0),
+      ],
+    },
+    {
+      id: "dinner",
+      name: "Jantar",
+      icon: "plate",
+      foods: [
+        food("Batata doce", 180, "g", 155, 2.9, 36, 0.2),
+        food("Patinho moido", 150, "g", 285, 39, 0, 12),
+        food("Legumes", 150, "g", 70, 3, 12, 1),
+      ],
+    },
+    {
+      id: "supper",
+      name: "Ceia",
+      icon: "crescent",
+      foods: [
+        food("Cottage", 100, "g", 98, 11, 3.4, 4.3),
+        food("Kiwi", 1, "un", 49, 0.9, 11, 0.4),
+      ],
+    },
+  ],
+};
+
+let plan = loadPlan();
+migratePlanIcons(plan);
+
+const mealList = document.querySelector("#mealList");
+const mealTemplate = document.querySelector("#mealTemplate");
+const selectedMealName = document.querySelector("#selectedMealName");
+const mealTotals = document.querySelector("#mealTotals");
+const foodRows = document.querySelector("#foodRows");
+const foodForm = document.querySelector("#foodForm");
+
+function food(name, quantity, unit, calories, protein, carbs, fat) {
+  return {
+    id: createId(),
+    name,
+    quantity,
+    unit,
+    baseQuantity: quantity,
+    calories,
+    protein,
+    carbs,
+    fat,
+  };
+}
+
+function loadPlan() {
+  const stored = readStoredPlan();
+  if (!stored) return clonePlan(defaultPlan);
+
+  try {
+    const parsed = JSON.parse(stored);
+    if (!parsed.meals?.length) return clonePlan(defaultPlan);
+    return parsed;
+  } catch {
+    return clonePlan(defaultPlan);
+  }
+}
+
+function migratePlanIcons(activePlan) {
+  const dinner = activePlan.meals?.find((meal) => meal.id === "dinner");
+  if (dinner && (dinner.icon === "banana" || dinner.icon === "moon")) dinner.icon = "plate";
+}
+
+function savePlan() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
+  } catch {
+    // Some mobile file viewers block localStorage. The app should still work in-memory.
+  }
+}
+
+function totalsForFoods(foods) {
+  return foods.reduce(
+    (acc, item) => {
+      const multiplier = item.baseQuantity > 0 ? item.quantity / item.baseQuantity : 1;
+      acc.calories += item.calories * multiplier;
+      acc.protein += item.protein * multiplier;
+      acc.carbs += item.carbs * multiplier;
+      acc.fat += item.fat * multiplier;
+      return acc;
+    },
+    { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  );
+}
+
+function allTotals() {
+  return totalsForFoods(plan.meals.flatMap((meal) => meal.foods));
+}
+
+function formatNumber(value, digits = 0) {
+  return new Intl.NumberFormat("pt-BR", {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatMacro(value) {
+  return `${formatNumber(value, value < 10 ? 1 : 0)}g`;
+}
+
+function render() {
+  if (!plan.meals.some((meal) => meal.id === plan.selectedMealId)) {
+    plan.selectedMealId = plan.meals[0]?.id ?? null;
+  }
+
+  renderSummary();
+  renderMeals();
+  renderSelectedMeal();
+  savePlan();
+}
+
+function renderSummary() {
+  const totals = allTotals();
+  document.querySelector("#totalCalories").textContent = `${formatNumber(totals.calories)} kcal`;
+  document.querySelector("#totalProtein").textContent = formatMacro(totals.protein);
+  document.querySelector("#totalCarbs").textContent = formatMacro(totals.carbs);
+  document.querySelector("#totalFat").textContent = formatMacro(totals.fat);
+
+  const macroCalories = {
+    protein: totals.protein * 4,
+    carbs: totals.carbs * 4,
+    fat: totals.fat * 9,
+  };
+  const macroTotal = Math.max(macroCalories.protein + macroCalories.carbs + macroCalories.fat, 1);
+  document.querySelector("#proteinBar").style.width = `${(macroCalories.protein / macroTotal) * 100}%`;
+  document.querySelector("#carbBar").style.width = `${(macroCalories.carbs / macroTotal) * 100}%`;
+  document.querySelector("#fatBar").style.width = `${(macroCalories.fat / macroTotal) * 100}%`;
+}
+
+function renderMeals() {
+  mealList.replaceChildren();
+  plan.meals.forEach((meal) => {
+    const node = mealTemplate.content.firstElementChild.cloneNode(true);
+    const totals = totalsForFoods(meal.foods);
+    node.classList.toggle("active", meal.id === plan.selectedMealId);
+    node.dataset.mealId = meal.id;
+    node.querySelector(".meal-icon").dataset.icon = meal.icon;
+    node.querySelector("strong").textContent = meal.name;
+    node.querySelector("small").textContent =
+      meal.foods.length === 1
+        ? "1 alimento"
+        : `${meal.foods.length} alimentos | ${formatMacro(totals.protein)} PTN | ${formatMacro(totals.carbs)} CHO`;
+    node.querySelector(".meal-kcal").textContent = `${formatNumber(totals.calories)} kcal`;
+    mealList.append(node);
+  });
+}
+
+function renderSelectedMeal() {
+  const meal = currentMeal();
+  foodRows.replaceChildren();
+
+  if (!meal) {
+    selectedMealName.textContent = "Nenhuma refeicao";
+    mealTotals.innerHTML = "";
+    foodRows.innerHTML = `<tr><td colspan="7" class="empty-state">Adicione uma refeicao para comecar.</td></tr>`;
+    return;
+  }
+
+  selectedMealName.textContent = meal.name;
+  const totals = totalsForFoods(meal.foods);
+  mealTotals.innerHTML = totalBlock("Calorias", `${formatNumber(totals.calories)} kcal`)
+    + totalBlock("Proteina", formatMacro(totals.protein))
+    + totalBlock("Carboidrato", formatMacro(totals.carbs))
+    + totalBlock("Gordura", formatMacro(totals.fat));
+
+  if (!meal.foods.length) {
+    foodRows.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhum alimento nesta refeicao.</td></tr>`;
+    return;
+  }
+
+  meal.foods.forEach((item) => {
+    const row = document.createElement("tr");
+    const itemTotals = totalsForFoods([item]);
+    row.innerHTML = `
+      <td>
+        <div class="food-name">${escapeHtml(item.name)}</div>
+        <div class="food-unit">Base: ${formatNumber(item.baseQuantity, 1)}${escapeHtml(item.unit)}</div>
+      </td>
+      <td>
+        <div class="qty-control">
+          <button type="button" data-action="decrease" data-food-id="${item.id}" title="Diminuir quantidade">-</button>
+          <input type="number" min="0" step="1" value="${item.quantity}" data-action="quantity" data-food-id="${item.id}" aria-label="Quantidade de ${escapeHtml(item.name)}" />
+          <button type="button" data-action="increase" data-food-id="${item.id}" title="Aumentar quantidade">+</button>
+        </div>
+      </td>
+      <td>${formatNumber(itemTotals.calories)}</td>
+      <td>${formatMacro(itemTotals.protein)}</td>
+      <td>${formatMacro(itemTotals.carbs)}</td>
+      <td>${formatMacro(itemTotals.fat)}</td>
+      <td>
+        <div class="row-actions">
+          <button class="edit-food" type="button" data-action="edit" data-food-id="${item.id}" title="Editar alimento">Edit</button>
+          <button class="delete-food" type="button" data-action="delete" data-food-id="${item.id}" title="Remover alimento">x</button>
+        </div>
+      </td>
+    `;
+    foodRows.append(row);
+  });
+}
+
+function totalBlock(label, value) {
+  return `<div><span>${label}</span><strong>${value}</strong></div>`;
+}
+
+function currentMeal() {
+  return plan.meals.find((meal) => meal.id === plan.selectedMealId);
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;",
+    };
+    return entities[char];
+  });
+}
+
+mealList.addEventListener("click", (event) => {
+  const mealCard = event.target.closest(".meal-card");
+  if (!mealCard) return;
+  plan.selectedMealId = mealCard.dataset.mealId;
+  render();
+});
+
+foodRows.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  const item = currentMeal()?.foods.find((foodItem) => foodItem.id === button.dataset.foodId);
+  if (!item) return;
+
+  if (button.dataset.action === "increase") item.quantity += stepFor(item);
+  if (button.dataset.action === "decrease") item.quantity = Math.max(0, item.quantity - stepFor(item));
+  if (button.dataset.action === "edit") editFood(item);
+  if (button.dataset.action === "delete") {
+    currentMeal().foods = currentMeal().foods.filter((foodItem) => foodItem.id !== item.id);
+  }
+  render();
+});
+
+foodRows.addEventListener("change", (event) => {
+  if (event.target.dataset.action !== "quantity") return;
+  const item = currentMeal()?.foods.find((foodItem) => foodItem.id === event.target.dataset.foodId);
+  if (!item) return;
+  item.quantity = Math.max(0, Number(event.target.value) || 0);
+  render();
+});
+
+foodForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const meal = currentMeal();
+  if (!meal) return;
+
+  meal.foods.push(
+    food(
+      document.querySelector("#foodName").value.trim(),
+      Number(document.querySelector("#foodQuantity").value),
+      document.querySelector("#foodUnit").value,
+      Number(document.querySelector("#foodCalories").value),
+      Number(document.querySelector("#foodProtein").value),
+      Number(document.querySelector("#foodCarbs").value),
+      Number(document.querySelector("#foodFat").value),
+    ),
+  );
+  foodForm.reset();
+  document.querySelector("#foodQuantity").value = 100;
+  render();
+});
+
+document.querySelector("#addMeal").addEventListener("click", () => {
+  const name = prompt("Nome da nova refeicao:");
+  if (!name?.trim()) return;
+  const meal = {
+    id: createId(),
+    name: name.trim(),
+    icon: "meal",
+    foods: [],
+  };
+  plan.meals.push(meal);
+  plan.selectedMealId = meal.id;
+  render();
+});
+
+document.querySelector("#renameMeal").addEventListener("click", () => {
+  const meal = currentMeal();
+  if (!meal) return;
+  const name = prompt("Novo nome da refeicao:", meal.name);
+  if (!name?.trim()) return;
+  meal.name = name.trim();
+  render();
+});
+
+document.querySelector("#deleteMeal").addEventListener("click", () => {
+  const meal = currentMeal();
+  if (!meal) return;
+  const confirmed = confirm(`Excluir "${meal.name}" e todos os alimentos?`);
+  if (!confirmed) return;
+  plan.meals = plan.meals.filter((item) => item.id !== meal.id);
+  plan.selectedMealId = plan.meals[0]?.id ?? null;
+  render();
+});
+
+document.querySelector("#resetPlan").addEventListener("click", () => {
+  const confirmed = confirm("Restaurar o plano inicial? Suas alteracoes salvas serao substituidas.");
+  if (!confirmed) return;
+  plan = clonePlan(defaultPlan);
+  render();
+});
+
+function stepFor(item) {
+  if (item.unit === "un" || item.unit === "dose") return 1;
+  if (item.baseQuantity >= 100) return 10;
+  return 5;
+}
+
+function editFood(item) {
+  const fields = [
+    ["name", "Nome do alimento", item.name],
+    ["quantity", "Quantidade atual", item.quantity],
+    ["unit", "Unidade", item.unit],
+    ["calories", "Calorias da quantidade base", item.calories],
+    ["protein", "Proteina da quantidade base", item.protein],
+    ["carbs", "Carboidrato da quantidade base", item.carbs],
+    ["fat", "Gordura da quantidade base", item.fat],
+  ];
+
+  const updates = {};
+  for (const [key, label, value] of fields) {
+    const answer = prompt(label, value);
+    if (answer === null) return;
+    updates[key] = answer.trim();
+  }
+
+  item.name = updates.name || item.name;
+  item.quantity = parsePositiveNumber(updates.quantity, item.quantity);
+  item.baseQuantity = item.quantity || item.baseQuantity;
+  item.unit = updates.unit || item.unit;
+  item.calories = parsePositiveNumber(updates.calories, 0);
+  item.protein = parsePositiveNumber(updates.protein, 0);
+  item.carbs = parsePositiveNumber(updates.carbs, 0);
+  item.fat = parsePositiveNumber(updates.fat, 0);
+}
+
+function parsePositiveNumber(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.max(0, parsed) : fallback;
+}
+
+function createId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+}
+
+function clonePlan(value) {
+  if (typeof structuredClone === "function") return structuredClone(value);
+  return JSON.parse(JSON.stringify(value));
+}
+
+function readStoredPlan() {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+render();
+
+</script>
+  </body>
+</html>
+
