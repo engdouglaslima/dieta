@@ -650,7 +650,7 @@ select:focus {
     </template>
 
     <script>
-const STORAGE_KEY = "diet-planner-v1";
+const STORAGE_KEY = "diet-planner-v2";
 
 const defaultPlan = {
   selectedMealId: "breakfast",
@@ -660,10 +660,10 @@ const defaultPlan = {
       name: "Cafe da manha",
       icon: "sun",
       foods: [
-        food("Pao frances", 50, "g", 150, 5, 29, 1.6),
-        food("Ovos inteiros", 2, "un", 144, 12.6, 0.8, 9.8),
-        food("Banana", 1, "un", 105, 1.3, 27, 0.4),
-        food("Aveia", 30, "g", 117, 5, 20, 2.1),
+        food("Banana Branca", 100, "g", 90, 1, 23, 0.3),
+        food("Aveia em Flocos Finos Levit", 50, "g", 364, 14, 58, 7.8, 100),
+        food("Whey Protein Black Skull 100% HD", 30, "g", 125, 21, 5.9, 1.9),
+        food("Cafe com Leite Integral", 180, "ml", 31, 1.6, 2.4, 1.7),
       ],
     },
     {
@@ -671,8 +671,11 @@ const defaultPlan = {
       name: "Lanche",
       icon: "sandwich",
       foods: [
-        food("Iogurte natural", 170, "g", 110, 8, 12, 3),
-        food("Granola", 30, "g", 135, 3, 20, 4.5),
+        food("Pao Pullman", 125, "g", 124.5, 4.4, 24, 1.3),
+        food("Whey Protein Black Skull 100% HD", 3, "g", 125, 21, 6, 2, 30),
+        food("Yogurt Natural Semidesnatado", 10, "g", 88, 9.6, 8, 1.6, 160),
+        food("Ricota Fresca Becker sem Sal", 25, "g", 30.3, 3.96, 0, 1.44, 30),
+        food("Cafe com Leite Integral", 180, "ml", 31, 1.6, 2.4, 1.7),
       ],
     },
     {
@@ -680,10 +683,12 @@ const defaultPlan = {
       name: "Almoco",
       icon: "plate",
       foods: [
-        food("Arroz branco", 150, "g", 195, 3.6, 42, 0.4),
-        food("Feijao carioca", 120, "g", 91, 5.8, 16.4, 0.6),
-        food("Frango grelhado", 160, "g", 264, 49.6, 0, 5.8),
-        food("Azeite", 8, "g", 72, 0, 0, 8),
+        food("Macarrao", 150, "g", 170, 5.4, 35, 0.5333333333, 100),
+        food("Patinho moido", 100, "g", 219, 36, 0, 7.3),
+        food("Legumes", 100, "g", 92, 2.7, 13, 3.6),
+        food("Tomate", 50, "g", 18, 1, 4, 0.2, 100),
+        food("Brocolis", 50, "g", 34, 2.8, 7, 0.4, 100),
+        food("Laranja", 1, "un", 62, 1.2, 15, 0.2),
       ],
     },
     {
@@ -691,9 +696,11 @@ const defaultPlan = {
       name: "Lanche tarde",
       icon: "bowl",
       foods: [
-        food("Whey protein", 30, "g", 120, 24, 3, 2),
-        food("Leite integral", 200, "ml", 124, 6.4, 9.6, 6.6),
-        food("Maca", 1, "un", 72, 0.4, 19, 0.2),
+        food("Pao Pullman", 125, "g", 124.5, 4.4, 24, 1.3),
+        food("Whey Protein Black Skull 100% HD", 3, "g", 125, 21, 6, 2, 30),
+        food("Yogurt Natural Semidesnatado", 10, "g", 88, 9.6, 8, 1.6, 160),
+        food("Ricota Fresca Becker sem Sal", 25, "g", 30.3, 3.96, 0, 1.44, 30),
+        food("Cafe com Leite Integral", 180, "ml", 31, 1.6, 2.4, 1.7),
       ],
     },
     {
@@ -701,9 +708,9 @@ const defaultPlan = {
       name: "Pre-treino",
       icon: "bolt",
       foods: [
-        food("Tapioca", 70, "g", 168, 0.2, 42, 0),
-        food("Mel", 15, "g", 46, 0, 12.4, 0),
-        food("Cafe sem acucar", 120, "ml", 2, 0.2, 0, 0),
+        food("Pao Pullman", 125, "g", 125, 4.4, 24, 1.3),
+        food("Doce de Leite Tirol", 30, "g", 306.6666666667, 5.6666666667, 56.6666666667, 6.6666666667, 100),
+        food("Cafe com Leite Integral", 180, "ml", 31, 1.6, 2.4, 1.7),
       ],
     },
     {
@@ -711,9 +718,12 @@ const defaultPlan = {
       name: "Jantar",
       icon: "plate",
       foods: [
-        food("Batata doce", 180, "g", 155, 2.9, 36, 0.2),
-        food("Patinho moido", 150, "g", 285, 39, 0, 12),
-        food("Legumes", 150, "g", 70, 3, 12, 1),
+        food("Arroz", 185, "g", 130.2702702703, 2.7027027027, 27.8378378378, 0.3243243243, 100),
+        food("Filezinho de Frango (Sassami)", 170, "g", 105.8823529412, 22.9411764706, 0, 1.4705882353, 100),
+        food("Legumes", 100, "g", 92, 2.7, 13, 3.6),
+        food("Tomate", 50, "g", 18, 1, 4, 0.2, 100),
+        food("Brocolis", 50, "g", 34, 2.8, 7, 0.4, 100),
+        food("Laranja", 1, "un", 62, 1.2, 15, 0.2),
       ],
     },
     {
@@ -721,8 +731,9 @@ const defaultPlan = {
       name: "Ceia",
       icon: "crescent",
       foods: [
-        food("Cottage", 100, "g", 98, 11, 3.4, 4.3),
-        food("Kiwi", 1, "un", 49, 0.9, 11, 0.4),
+        food("Yogurt Natural Semidesnatado", 100, "g", 88.8, 10.08, 8.64, 1.52, 160),
+        food("Banana Branca", 50, "g", 90, 4, 56, 0.4, 100),
+        food("Whey Protein Black Skull 100% HD", 15, "g", 125, 22, 6, 1.9, 30),
       ],
     },
   ],
@@ -738,13 +749,13 @@ const mealTotals = document.querySelector("#mealTotals");
 const foodRows = document.querySelector("#foodRows");
 const foodForm = document.querySelector("#foodForm");
 
-function food(name, quantity, unit, calories, protein, carbs, fat) {
+function food(name, quantity, unit, calories, protein, carbs, fat, baseQuantity = quantity) {
   return {
     id: createId(),
     name,
     quantity,
     unit,
-    baseQuantity: quantity,
+    baseQuantity,
     calories,
     protein,
     carbs,
